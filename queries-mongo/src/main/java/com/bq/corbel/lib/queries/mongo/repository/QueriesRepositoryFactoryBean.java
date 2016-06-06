@@ -39,8 +39,8 @@ public class QueriesRepositoryFactoryBean<R extends MongoRepository<T, I>, T, I 
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
-        protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
-            return new FindExtendedRepository(getEntityInformation(repositoryInformation.getDomainType()), mongoOperations);
+        protected Object getTargetRepository(RepositoryMetadata repositoryMetadata) {
+            return new FindExtendedRepository(getEntityInformation(repositoryMetadata.getDomainType()), mongoOperations);
         }
     }
 
