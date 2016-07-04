@@ -1,5 +1,6 @@
 package com.bq.corbel.lib.queries.request;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,22 +11,28 @@ import java.util.Optional;
 public class Search {
     private boolean indexFieldsOnly;
     private Optional<String> text;
+    private Optional<List<String>> fields;
     private Optional<String> template;
     private Optional<Map<String, Object>> params;
 
-    public Search(boolean binded, String text, String template, Map<String, Object> params) {
+    public Search(boolean binded, String text, List<String> fields, String template, Map<String, Object> params) {
         this.indexFieldsOnly = binded;
         this.text = Optional.ofNullable(text);
+        this.fields = Optional.ofNullable(fields);
         this.template = Optional.ofNullable(template);
         this.params = Optional.ofNullable(params);
     }
 
     public Search(boolean indexFieldsOnly, String text) {
-        this(indexFieldsOnly, text, null, null);
+        this(indexFieldsOnly, text, null, null, null);
+    }
+
+    public Search(boolean indexFieldsOnly, String text, List<String> fields) {
+        this(indexFieldsOnly, text, fields, null, null);
     }
 
     public Search(boolean indexFieldsOnly, String template, Map<String, Object> params) {
-        this(indexFieldsOnly, null, template, params);
+        this(indexFieldsOnly, null, null, template, params);
     }
 
     public boolean indexFieldsOnly() {
@@ -43,6 +50,10 @@ public class Search {
     public void setText(Optional<String> text) {
         this.text = text;
     }
+
+    public Optional<List<String>> getFields() {return fields;}
+
+    public void setFields(Optional<List<String>> fields) {this.fields = fields;}
 
     public Optional<String> getTemplate() {
         return template;
@@ -68,6 +79,7 @@ public class Search {
         result = prime * result + ((params == null) ? 0 : params.hashCode());
         result = prime * result + ((template == null) ? 0 : template.hashCode());
         result = prime * result + ((text == null) ? 0 : text.hashCode());
+        result = prime * result + ((fields == null) ? 0 : fields.hashCode());
         return result;
     }
 
@@ -105,6 +117,13 @@ public class Search {
                 return false;
             }
         } else if (!text.equals(other.text)) {
+            return false;
+        }
+        if (fields == null) {
+            if (other.fields != null) {
+                return false;
+            }
+        } else if (!fields.equals(other.fields)) {
             return false;
         }
         return true;
