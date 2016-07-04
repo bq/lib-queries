@@ -2,6 +2,7 @@ package com.bq.corbel.lib.queries.parser;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +18,8 @@ public class CustomSearchParser implements SearchParser {
 
     private static final String INVALID_SEARCH_OBJECT = "Invalid Search Object";
     private static final String PARAMS = "params";
+    private static final String FIELDS = "fields";
+    private static final String TEXT = "text";
     private static final String TEMPLATE_NAME = "templateName";
     private final ObjectMapper mapper;
 
@@ -29,7 +32,17 @@ public class CustomSearchParser implements SearchParser {
     public Search parse(String searchString, boolean indexFieldsOnly) throws MalformedJsonQueryException {
         try {
             Map<String, Object> map = mapper.readValue(searchString, HashMap.class);
-            return new Search(indexFieldsOnly, getTemplateName(map), getTemplateParams(map));
+            List<String> fields = (List<String>) map.get(FIELDS);
+            String text = (String) map.get(TEXT);
+
+            if(fields != null && text != null) {
+                return new Search(indexFieldsOnly, text, fields);
+            } else if (text != null) {
+                return new Search(indexFieldsOnly, text);
+            }
+            else {
+                return new Search(indexFieldsOnly, getTemplateName(map), getTemplateParams(map));
+            }
         } catch (ClassCastException e) {
             throw new MalformedJsonQueryException(e);
         } catch (IOException e) {
