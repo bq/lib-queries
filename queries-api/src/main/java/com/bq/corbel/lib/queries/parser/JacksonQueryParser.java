@@ -21,6 +21,7 @@ import com.bq.corbel.lib.queries.request.QueryLiteral;
 import com.bq.corbel.lib.queries.request.QueryNode;
 import com.bq.corbel.lib.queries.request.QueryOperator;
 import com.bq.corbel.lib.queries.request.ResourceQuery;
+import org.springframework.util.StringUtils;
 
 public class JacksonQueryParser implements QueryParser {
 
@@ -36,6 +37,8 @@ public class JacksonQueryParser implements QueryParser {
 
     @Override
     public ResourceQuery parse(String queryString) throws MalformedJsonQueryException {
+        if (StringUtils.isEmpty(queryString)) return new ResourceQuery();
+
         JsonNode nodes = jsonParser.readValueAsTree(queryString);
         return getParseQueriesFromTree(nodes);
     }

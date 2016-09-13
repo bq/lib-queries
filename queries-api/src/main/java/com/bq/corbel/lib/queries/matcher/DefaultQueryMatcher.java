@@ -13,6 +13,8 @@ public class DefaultQueryMatcher implements QueryMatcher {
 
     @Override
     public boolean matchObject(ResourceQuery resourceQuery, Object object) throws QueryMatchingException {
+        if (resourceQuery == null || object == null) return false;
+
         for (QueryNode queryNode : resourceQuery) {
             if (queryNode.getOperator() == QueryOperator.$EXISTS) {
                 try {
